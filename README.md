@@ -19,7 +19,7 @@ Before we define the algorithm, first some things need to be stablished:
 
 Now, to the definition:
 
-First, we create all $W$ worker threads, and send $W-1$ of them to sleep. The remaining worker thread starts exploring the matrix in some vertex $(x_0,y_0)$.
+First, we create all $W$ worker threads, and send $W-1$ of them to sleep. The remaining worker thread starts exploring the matrix in some vertex $(x_0,y_0)$. Whenever a waken worker thread finds some vertex in which it can take more than one action (there is more than one unexplored open direction), it trys to awaken enough worker threads to explore all the directions it won't, and proceeds to explore one of those direction to which it didn't allocate another thread. If the worker thread fails to awaken another thread, that next vertex in the failed path is marked as explored and is put in a FI-FO Queue, to be explored by another worker thread later. Before moving from a vertex to another, the worker thread marks that vertex as explored. Whenever a worker thread cannot move to any direction whatsoever, it stops and goes to sleep. A sleeping thread is awakened when there the Queue of unexplored paths is not empty. When any thread finds the exit to the maze, all threads stop.
 
 ___
 ## Examples:
