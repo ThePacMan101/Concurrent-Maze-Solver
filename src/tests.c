@@ -190,7 +190,7 @@ void build_maze_blueprint(maze_t *maze,int_t* blueprint){
 
 int main(void){
     srand(time(NULL));
-    maze_t maze = generate_random_maze(50,25,15000);
+    maze_t maze = generate_random_maze(50,25,30000);
     print_maze(maze);
     //     print_maze(maze);
     // for(int size = 100 ; size <= 1000 ; size+=100){
