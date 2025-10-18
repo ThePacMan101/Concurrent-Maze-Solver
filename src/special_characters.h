@@ -13,7 +13,7 @@ typedef wchar_t spchar_t;
 spchar_t get_box_char(direction_t dirs) {
     switch (dirs) {
         case 0:
-            return L'.';
+            return L' ';
         case NORTH: 
             return L' ';
         case SOUTH: 
@@ -65,7 +65,7 @@ typedef char spchar_t;
 spchar_t get_box_char(direction_t dirs) {
     switch (dirs) {
         case 0:
-            return '·';
+            return '░';
         case NORTH: case SOUTH: 
             return '║';
         case EAST: case WEST:

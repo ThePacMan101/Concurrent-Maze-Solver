@@ -6,8 +6,11 @@
 #include <stdint.h>
 #include <math.h>
 #include <time.h>
+#include <assert.h>
+#include <stdbool.h>
 
 #define PERROR(...) {fprintf(stderr,"[ERROR]: ");fprintf(stderr,__VA_ARGS__);fprintf(stderr,"\n");exit(1);}
 
+#define CPU_CORES 8
 
 #endif

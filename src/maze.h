@@ -19,16 +19,21 @@ enum direction{ NORTH=1,EAST=2,SOUTH=4,WEST=8 };
 
 
 typedef struct{
-    maze_vertex_t * data; 
+    maze_vertex_t * data;
+    vec2_t true_dimensions;
+    int_t start;
     vec2_t dimensions;
 } maze_t;
-#define maze_at(maze,_x,_y) ((maze).data[(_x) + (_y)*(maze).dimensions.x])
+#define maze_at(maze,_x,_y) ((maze).data[(maze).start + (_x) + (_y)*(maze).true_dimensions.x])
 
 // saves maze as bitmap to file in path
 extern void save_maze_to_bmap(maze_t maze, char* path);
 
 // generates a random maze using the Markov Chain Montecarlo method
 extern maze_t generate_random_maze(int_t dim_x,int_t dim_y, uint64_t number_of_iterations);
+
+// generates a random maze using the Markov Chain Montecarlo method in parallel
+extern maze_t generate_random_maze_parallel(int_t dim_x,int_t dim_y,uint64_t number_of_iterations,uint8_t workers);
 
 // prints maze to shell, keep in mind a large maze may be
 // hard to understand when using this visualization.
