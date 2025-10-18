@@ -23,11 +23,12 @@ First, we create all $W$ worker threads, and send $W-1$ of them to sleep. The on
 
 ___
 ## Examples:
-Example of 50x25 maze generated using 15000 iterations of the MCMC method
-![maze exemple 1](imgs/maze-1.png)
+Example of 30x30 maze with 9000 iterations for the MCMC method:
+![alt text](imgs/maze-1.png)
 
-Example of 50x25 maze generated using 30000 iterations of the MCMC method
-![maze exemple 2](imgs/maze-2.png)
+Example of 60x60 maze with 216000 iterations for the MCMC method:
+![alt text](imgs/maze-2.png)
+
 ___
 How to compile and run:
 
@@ -40,6 +41,9 @@ in, /src:
 To run:
 in, /src:
 ```shell
->> ./bin/tests
+>> ./bin/tests <tests to be run>
 ```
-
+example:
+```shell
+>> ./bin/tests 1 2 4
+```
