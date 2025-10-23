@@ -24,11 +24,11 @@ void test_3(){
 }
 
 void test_4(){
-    int_t size = 25;
+    int_t size = 32;
     uint64_t iterations = size*size*size + 100;
     uint8_t power = log2l(CPU_CORES);
     uint8_t workers = 1<<power; 
-    maze_t maze = generate_random_maze_parallel(size,size-1,iterations,workers);
+    maze_t maze = generate_random_maze_parallel(size,size,iterations,workers);
     print_maze(maze);
     free(maze.data);
 }
@@ -48,6 +48,16 @@ void test_5(){
     free(maze.data);
 }
 
+void test_6(){
+    int_t size = 1024;
+    uint64_t iterations = size*size*size + 100;
+    uint8_t power = log2l(CPU_CORES);
+    uint8_t workers = 1<<power; 
+    maze_t maze = generate_random_maze_parallel(size,size,iterations,workers);
+    print_maze(maze);
+    free(maze.data);
+}
+
 int main(int argc, char ** argv){
     srand(42);
     
@@ -59,6 +69,7 @@ int main(int argc, char ** argv){
             case 3: test_3(); break;
             case 4: test_4(); break;
             case 5: test_5(); break;
+            case 6: test_6(); break;
             default: break;
         } 
     }

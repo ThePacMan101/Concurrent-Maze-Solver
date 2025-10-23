@@ -231,22 +231,41 @@ static void split_maze_in_half(maze_t origin, maze_t *target_1,maze_t *target_2,
     }
 }
 
+// simple buble sort to sort submazes in array based on maze.start value
+// which means it goest left to right, top to bottom, in that order.
+static void sort_sub_mazes(maze_t* sub_mazes, uint8_t parts){
+    bool sorted;
+    for(int i = 0 ; i < parts-1 ; ++i){
+        sorted = true;
+        for(int j = 0; j < parts-1-i ;++j){
+            if(sub_mazes[j].start > sub_mazes[j+1].start){
+                maze_t aux = sub_mazes[j];
+                sub_mazes[j] = sub_mazes[j+1];
+                sub_mazes[j+1] = aux;
+                sorted = false;
+            }
+        }
+        if(sorted) break;
+    }
+}
 
 // splits a maze into parts, each one is stored in a slot of the target array
 // parts store in target are just new references to the same memory from the 
-// original maze. Must be power of 2 parts.
+// original maze. Must be power of 2 parts. The sub_mazes array is sorted keyed 
+// at maze.start, which means it goes left to right, top to bottom, in that order.
 static uint8_t free_slot = 0 ;
 static void _recursive_split_maze(maze_t maze ,maze_t *target,uint8_t parts);
 void split_maze(maze_t maze ,maze_t *target,uint8_t parts){
     if(parts != 1<<((uint8_t)log2l(parts))) PERROR("Can't split maze in %d parts, must be power of 2.",parts);
     free_slot = 0;
     _recursive_split_maze(maze, target, parts);
+    sort_sub_mazes(target,parts);
     free_slot = 0;
 }
 static void _recursive_split_maze(maze_t maze ,maze_t *target,uint8_t parts){
     // Always slices the maze in half through the bigger side
     int_t max_side = (maze.dimensions.x>maze.dimensions.y)?maze.dimensions.x:maze.dimensions.y;
-    bool should_cut_horizontaly = max_side==maze.dimensions.x;
+    bool should_cut_horizontaly = max_side==maze.dimensions.x && max_side!=maze.dimensions.y;
     
     // Cuts into parts A and B
     maze_t A,B;
@@ -272,8 +291,12 @@ typedef struct{
     uint8_t id;
 } _generate_random_maze_thread_args_t;
 static pthread_mutex_t mutex;
-void * _generate_random_maze_thread(void*void_args);
+static void * _generate_random_maze_thread(void*void_args);
+// static void glue_maze(maze_t maze, maze_t* sub_mazes, uint8_t parts);
+static void naive_glue_maze(maze_t maze, maze_t* sub_mazes, uint8_t parts);
 maze_t generate_random_maze_parallel(int_t dim_x,int_t dim_y,uint64_t number_of_iterations,uint8_t workers){
+    if(log2l(dim_x) != (int_t)log2l(dim_x) || dim_x != dim_y)
+        PERROR("Parallel maze generation currently only suports square mazes with powers of two for sides");
     // if only one worker, just use sequential generation
     if(workers == 1)
         return generate_random_maze(dim_x,dim_y,number_of_iterations);
@@ -323,9 +346,10 @@ maze_t generate_random_maze_parallel(int_t dim_x,int_t dim_y,uint64_t number_of_
 
 
     // Now that we generated the "insides" of each sub maze, we 
-    // must connect them, to do so, we simply TODO
+    // must connect them, to do so, we simply "glue them"
 
-
+    // glue_maze(maze,sub_mazes,workers);
+    naive_glue_maze(maze,sub_mazes,workers);
 
     // free memory and return maze
     pthread_mutex_destroy(&mutex);
@@ -334,8 +358,7 @@ maze_t generate_random_maze_parallel(int_t dim_x,int_t dim_y,uint64_t number_of_
     return maze;
 }
 
-
-void * _generate_random_maze_thread(void*void_args){
+static void * _generate_random_maze_thread(void*void_args){
     _generate_random_maze_thread_args_t *args;
     args = (_generate_random_maze_thread_args_t *)void_args;
 
@@ -354,9 +377,176 @@ void * _generate_random_maze_thread(void*void_args){
     int_t *blueprint = random_maze_blueprint(dim_x,dim_y,number_of_iterations);
     build_maze_blueprint(&(args->sub_maze),blueprint);
     
-    
-    
     free(args);
 
     return (void*)NULL;
 }
+
+static void randomly_connect_sub_mazes_horizontal(maze_t left,maze_t right){
+    if(left.dimensions.y != right.dimensions.y) 
+        PERROR("Invalid maze connection. Should have same height.");
+
+    uint8_t number = rand()%left.dimensions.y;
+    maze_at(left,left.dimensions.x-1,number).open_directions |= EAST;
+    maze_at(right,0,number).open_directions |= WEST;
+}
+
+static void randomly_connect_sub_mazes_vertical(maze_t up,maze_t down){
+    if(up.dimensions.x != down.dimensions.x)
+        PERROR("Invalid maze connection. Should have same width.");
+
+    uint8_t number = rand()%up.dimensions.x;
+    maze_at(up,number,up.dimensions.y-1).open_directions |= SOUTH;
+    maze_at(down,number,0).open_directions |= NORTH;
+}
+
+static void naive_glue_maze(maze_t maze, maze_t* sub_mazes, uint8_t parts){
+#define sub_maze_at(_x,_y) sub_mazes[(_x) + (_y)*cols]
+    uint8_t cols = maze.dimensions.x/sub_mazes[0].dimensions.x;
+    uint8_t rows = maze.dimensions.y/sub_mazes[0].dimensions.y;
+    int_t curr_dim_x = sub_mazes[0].dimensions.x;
+    int_t curr_dim_y = sub_mazes[0].dimensions.y;   
+    srand(time(NULL));
+    maze_t left,right,up,down;
+    uint8_t direction;
+    maze_t curr_maze;
+    for(int y = 0 ; y < rows ; ++y){
+        for(int x = 0 ; x < cols ; ++x){
+        
+            
+            // top left
+            if(x==0 && y==0){
+                left = sub_maze_at(x,y);
+                right = sub_maze_at(x+1,y);
+                randomly_connect_sub_mazes_horizontal(left,right);
+                up = sub_maze_at(x,y);
+                down = sub_maze_at(x,y+1);
+                randomly_connect_sub_mazes_vertical(up,down);
+            }
+
+            // top right
+            else if(x==cols-1 && y==0){
+                left = sub_maze_at(x-1,y);
+                right = sub_maze_at(x,y);
+                randomly_connect_sub_mazes_horizontal(left,right);
+                up = sub_maze_at(x,y);
+                down = sub_maze_at(x,y+1);
+                randomly_connect_sub_mazes_vertical(up,down);
+            }
+
+            // bottom left
+            else if(x==0 && y==rows-1){
+                left = sub_maze_at(x,y);
+                right = sub_maze_at(x+1,y);
+                randomly_connect_sub_mazes_horizontal(left,right);
+                up = sub_maze_at(x,y-1);
+                down = sub_maze_at(x,y);
+                randomly_connect_sub_mazes_vertical(up,down);
+            }
+
+            // bottom right
+            else if(x==cols-1 && y==rows-1){
+                left = sub_maze_at(x-1,y);
+                right = sub_maze_at(x,y);
+                randomly_connect_sub_mazes_horizontal(left,right);
+                up = sub_maze_at(x,y-1);
+                down = sub_maze_at(x,y);
+                randomly_connect_sub_mazes_vertical(up,down);
+            }
+
+            // left
+            else if(x==0){
+                left = sub_maze_at(x,y);
+                right = sub_maze_at(x+1,y);
+                randomly_connect_sub_mazes_horizontal(left,right);
+                up = sub_maze_at(x,y-1);
+                down = sub_maze_at(x,y);
+                randomly_connect_sub_mazes_vertical(up,down);
+                up = sub_maze_at(x,y);
+                down = sub_maze_at(x,y+1);
+                randomly_connect_sub_mazes_vertical(up,down);
+            }
+
+            // top
+            else if(y==0){
+                left = sub_maze_at(x-1,y);
+                right = sub_maze_at(x,y);
+                randomly_connect_sub_mazes_horizontal(left,right);
+                left = sub_maze_at(x,y);
+                right = sub_maze_at(x+1,y);
+                randomly_connect_sub_mazes_horizontal(left,right);
+                up = sub_maze_at(x,y);
+                down = sub_maze_at(x,y+1);
+                randomly_connect_sub_mazes_vertical(up,down);
+            }
+
+            // right
+            else if(x==cols-1){
+                left = sub_maze_at(x-1,y);
+                right = sub_maze_at(x,y);
+                randomly_connect_sub_mazes_horizontal(left,right);
+                up = sub_maze_at(x,y);
+                down = sub_maze_at(x,y+1);
+                randomly_connect_sub_mazes_vertical(up,down);
+                up = sub_maze_at(x,y-1);
+                down = sub_maze_at(x,y);
+                randomly_connect_sub_mazes_vertical(up,down);
+            }
+
+            // bottom
+            else if(y==rows-1){
+                left = sub_maze_at(x-1,y);
+                right = sub_maze_at(x,y);
+                randomly_connect_sub_mazes_horizontal(left,right);
+                left = sub_maze_at(x,y);
+                right = sub_maze_at(x+1,y);
+                randomly_connect_sub_mazes_horizontal(left,right);
+                up = sub_maze_at(x,y-1);
+                down = sub_maze_at(x,y);
+                randomly_connect_sub_mazes_vertical(up,down);
+            }
+            
+            // middle
+            else{
+                left = sub_maze_at(x-1,y);
+                right = sub_maze_at(x,y);
+                randomly_connect_sub_mazes_horizontal(left,right);
+                left = sub_maze_at(x,y);
+                right = sub_maze_at(x+1,y);
+                randomly_connect_sub_mazes_horizontal(left,right);
+                up = sub_maze_at(x,y-1);
+                down = sub_maze_at(x,y);
+                randomly_connect_sub_mazes_vertical(up,down);
+                up = sub_maze_at(x,y);
+                down = sub_maze_at(x,y+1);
+                randomly_connect_sub_mazes_vertical(up,down);
+
+            }
+        }
+    }
+
+#undef sub_maze_at
+}
+
+// The gluing part is singlehandedly stopping the algorithm from
+// working for any sized mazes, so If anyone can think of a better way
+// feel free to change it. 
+// static void glue_maze(maze_t maze, maze_t* sub_mazes, uint8_t parts){
+// #define sub_maze_at(_x,_y) sub_mazes[_x + _y*cols]
+//     uint8_t cols = sub_mazes->dimensions.x/maze.dimensions.x;
+//     uint8_t rows = sub_mazes->dimensions.y/maze.dimensions.y;
+//     srand(time(NULL));
+
+//     uint8_t curr_x,curr_y;
+//     curr_x = rand()%cols;
+//     curr_y = rand()%rows;
+//     do{
+//         if(curr_x == 0) continue; // cant go to the left
+//         if(curr_y == 0) continue; // cant go up
+//         if(curr_x == cols-1) continue; // cant go right
+//         if(curr_y == rows-1) continue; // cant go down
+
+//     }while(1);
+
+// #undef sub_maze_at
+// }
