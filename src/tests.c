@@ -1,7 +1,6 @@
 #include "maze.h"
 #include "common.h"
 
-
 void test_1(){
     uint64_t iterations = 50*50*50;
     maze_t maze = generate_random_maze(50,50,iterations);
@@ -25,12 +24,27 @@ void test_3(){
 }
 
 void test_4(){
-    int_t size = 15;
-    uint64_t iterations = size*size*size;
+    int_t size = 25;
+    uint64_t iterations = size*size*size + 100;
     uint8_t power = log2l(CPU_CORES);
     uint8_t workers = 1<<power; 
     maze_t maze = generate_random_maze_parallel(size,size-1,iterations,workers);
     print_maze(maze);
+    free(maze.data);
+}
+
+void test_5(){
+    int_t size = 10;
+    uint64_t iterations = size*size*size;
+    maze_t maze = generate_random_maze(size,size,iterations);
+    print_maze(maze);
+    printf("----\n");
+    maze_t sub_mazes[4];
+    split_maze(maze,sub_mazes,4);
+    for(int i = 0 ; i < 4 ; ++i){
+        print_maze(sub_mazes[i]);
+        printf("----\n");
+    } 
     free(maze.data);
 }
 
@@ -44,6 +58,7 @@ int main(int argc, char ** argv){
             case 2: test_2(); break;
             case 3: test_3(); break;
             case 4: test_4(); break;
+            case 5: test_5(); break;
             default: break;
         } 
     }

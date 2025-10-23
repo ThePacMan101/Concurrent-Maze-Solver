@@ -26,9 +26,6 @@ typedef struct{
 } maze_t;
 #define maze_at(maze,_x,_y) ((maze).data[(maze).start + (_x) + (_y)*(maze).true_dimensions.x])
 
-// saves maze as bitmap to file in path
-extern void save_maze_to_bmap(maze_t maze, char* path);
-
 // generates a random maze using the Markov Chain Montecarlo method
 extern maze_t generate_random_maze(int_t dim_x,int_t dim_y, uint64_t number_of_iterations);
 
@@ -39,5 +36,6 @@ extern maze_t generate_random_maze_parallel(int_t dim_x,int_t dim_y,uint64_t num
 // hard to understand when using this visualization.
 extern void print_maze(maze_t maze);
 
+extern void split_maze(maze_t maze ,maze_t *target,uint8_t parts);
 
 #endif
