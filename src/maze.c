@@ -403,13 +403,9 @@ static void randomly_connect_sub_mazes_vertical(maze_t up,maze_t down){
 static void naive_glue_maze(maze_t maze, maze_t* sub_mazes, uint8_t parts){
 #define sub_maze_at(_x,_y) sub_mazes[(_x) + (_y)*cols]
     uint8_t cols = maze.dimensions.x/sub_mazes[0].dimensions.x;
-    uint8_t rows = maze.dimensions.y/sub_mazes[0].dimensions.y;
-    int_t curr_dim_x = sub_mazes[0].dimensions.x;
-    int_t curr_dim_y = sub_mazes[0].dimensions.y;   
+    uint8_t rows = maze.dimensions.y/sub_mazes[0].dimensions.y;   
     srand(time(NULL));
     maze_t left,right,up,down;
-    uint8_t direction;
-    maze_t curr_maze;
     for(int y = 0 ; y < rows ; ++y){
         for(int x = 0 ; x < cols ; ++x){
         
