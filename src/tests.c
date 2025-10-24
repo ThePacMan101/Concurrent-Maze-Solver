@@ -1,6 +1,8 @@
 #include "maze.h"
 #include "common.h"
 
+
+char* description_1 = "generates a 50x50 maze";
 void test_1(){
     uint64_t iterations = 50*50*50;
     maze_t maze = generate_random_maze(50,50,iterations);
@@ -8,6 +10,7 @@ void test_1(){
     free(maze.data);
 }
 
+char* description_2 = "generates NxN mazes, with N = {10 , 20, ..., 100}";
 void test_2(){
     for(uint64_t size = 10 ; size <= 100 ; size+=10){
         uint64_t iterations = size*size*size;
@@ -17,12 +20,14 @@ void test_2(){
     }
 }
 
+char* description_3 = "generates a 500x500 maze";
 void test_3(){
     maze_t maze = generate_random_maze(500,500, 125000100);
     print_maze(maze);
     free(maze.data);
 }
 
+char* description_4 = "generates as 32x32 maze in parallel";
 void test_4(){
     int_t size = 32;
     uint64_t iterations = size*size*size + 100;
@@ -33,6 +38,7 @@ void test_4(){
     free(maze.data);
 }
 
+char* description_5 = "generates a 10x10 maze shows and its slices";
 void test_5(){
     int_t size = 10;
     uint64_t iterations = size*size*size;
@@ -48,6 +54,7 @@ void test_5(){
     free(maze.data);
 }
 
+char* description_6 =  "generates a 1024x1024 maze in parallel";
 void test_6(){
     int_t size = 1024;
     uint64_t iterations = size*size*size + 100;
@@ -58,9 +65,30 @@ void test_6(){
     free(maze.data);
 }
 
+char* description_7 = "generates a 4096x4096 maze in parallel";
+void test_7(){
+    int_t size = 4096;
+    uint64_t iterations = size*size*size + 100;
+    uint8_t power = log2l(CPU_CORES);
+    uint8_t workers = 1<<power; 
+    maze_t maze = generate_random_maze_parallel(size,size,iterations,workers);
+    print_maze(maze);
+    free(maze.data);
+}
+
 int main(int argc, char ** argv){
     srand(42);
-    
+    if(argc==1){
+        printf("\n1. ");printf(description_1);
+        printf("\n2. ");printf(description_2);
+        printf("\n3. ");printf(description_3);
+        printf("\n4. ");printf(description_4);
+        printf("\n5. ");printf(description_5);
+        printf("\n6. ");printf(description_6);
+        printf("\n7. ");printf(description_7);
+
+        printf("\n\nexample:  ./bin/tests 1 5 6\n\n");
+    }
     for(int_t i = 1 ; i <= argc ;++i){
         int_t test = atoi(argv[i]);
         switch (test) {
