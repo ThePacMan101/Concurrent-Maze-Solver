@@ -68,7 +68,7 @@ void test_6(){
 char* description_7 = "generates a 4096x4096 maze in parallel";
 void test_7(){
     int_t size = 4096;
-    uint64_t iterations = size*size*size + 100;
+    uint64_t iterations = ((uint64_t)size)*((uint64_t)size)*((uint64_t)size) + 100;
     uint8_t power = log2l(CPU_CORES);
     uint8_t workers = 1<<power; 
     maze_t maze = generate_random_maze_parallel(size,size,iterations,workers);

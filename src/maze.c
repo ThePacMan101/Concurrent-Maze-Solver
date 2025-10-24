@@ -107,7 +107,7 @@ static int_t * random_maze_blueprint(int_t dim_x, int_t dim_y, uint64_t number_o
         3. the new origin points to NULL (-1)
         4. go back to (1) unless you want to finish, anytime
     */
-    for(int_t i = 0 ; i < number_of_iterations ; ++i){
+    for(uint64_t i = 0 ; i < number_of_iterations ; ++i){
         direction_t available = NORTH|WEST|SOUTH|EAST;
         direction_t prohibited = 0;
 
