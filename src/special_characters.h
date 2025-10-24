@@ -61,45 +61,62 @@ void print_spchar(spchar_t ch) {
 
 #else
 
-typedef char spchar_t;
+#include <wchar.h>
+#include <stdbool.h>
+#include <locale.h>
+#include <stdarg.h>
+
+typedef wchar_t spchar_t;
 spchar_t get_box_char(direction_t dirs) {
     switch (dirs) {
         case 0:
-            return '░';
-        case NORTH: case SOUTH: 
-            return '║';
-        case EAST: case WEST:
-            return '═';
+            return L' ';
+        case NORTH: 
+            return L' ';
+        case SOUTH: 
+            return L' ';
+        case EAST:
+            return L' '; 
+        case WEST:
+            return L' ';
+
         case NORTH | EAST:
-            return '╚';
+            return L'╚';
         case NORTH | SOUTH:
-            return '║';
+            return L'║';
         case NORTH | WEST:
-            return '╝';
+            return L'╝';
         case EAST | SOUTH:
-            return '╔';
+            return L'╔';
         case EAST | WEST:
-            return '═';
+            return L'═';
         case SOUTH | WEST:
-            return '╗';
+            return L'╗';
 
         case NORTH | EAST | SOUTH:
-            return '╠';
+            return L'╠';
         case NORTH | EAST | WEST:
-            return '╩';
+            return L'╩';
         case NORTH | SOUTH | WEST:
-            return '╣';
+            return L'╣';
         case EAST | SOUTH | WEST:
-            return '╦';
+            return L'╦';
         case NORTH | EAST | SOUTH | WEST:
-            return '╬';
+            return L'╬';
         default:
-            return '?'; 
+            return L'?'; 
     }
 }
 
+
+static bool locale_is_set = false;
+
 void print_spchar(spchar_t ch){
-    printf("%c",ch);
+    if(!locale_is_set){
+        setlocale(LC_CTYPE, "");
+        locale_is_set = true; 
+    }
+    wprintf(L"%lc",ch);
 }
 #endif
 

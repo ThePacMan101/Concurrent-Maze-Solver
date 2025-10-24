@@ -18,7 +18,7 @@ void test_2(){
 }
 
 void test_3(){
-    maze_t maze = generate_random_maze(500,500, 999000999000);
+    maze_t maze = generate_random_maze(500,500, 125000100);
     print_maze(maze);
     free(maze.data);
 }

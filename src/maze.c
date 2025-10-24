@@ -46,7 +46,7 @@ void print_maze(maze_t maze){
 
             print_spchar(ch);
         }
-        printf("\n");
+        print_spchar(L'\n');
     }
 }
 
