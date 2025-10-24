@@ -98,6 +98,7 @@ int main(int argc, char ** argv){
             case 4: test_4(); break;
             case 5: test_5(); break;
             case 6: test_6(); break;
+            case 7: test_7(); break;
             default: break;
         } 
     }
