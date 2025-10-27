@@ -27,11 +27,24 @@ typedef struct{
 #define maze_at(maze,_x,_y) ((maze).data[(maze).start + (_x) + (_y)*(maze).true_dimensions.x])
 
 
-// alocates the data for a maze for the first time
+// alocates the *data* for a maze for the first time
+// usage:
+// maze_t maze;
+// alloc_maze(&maze,10,10);
+// Now maze.data is not NULL
 extern void alloc_maze(maze_t *maze,int_t dim_x, int_t dim_y);
 
 
 // gets a sub-maze of a bigger maze, that points to the same data in memory
+// suppose we have the maze:
+// 0x01 0x02 0x03
+// 0x04 0x05 0x06
+// 0x07 0x08 0x09
+// if se use get_sub_maze(maze,1,1,2,2); the result is:
+// 0x05 0x06
+// 0x08 0x09
+// this references the same data, it's not a copy of the original maze
+// it therefore, does not allocate more memory
 extern maze_t get_sub_maze(maze_t maze,int_t start_x,int_t start_y,int_t end_x,int_t end_y);
 
 
