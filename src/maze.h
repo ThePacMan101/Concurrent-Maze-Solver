@@ -71,6 +71,7 @@ extern maze_t generate_random_maze_MCMC(int_t dim_x,int_t dim_y, uint64_t number
 extern maze_t generate_random_maze_MCMC_parallel(int_t dim_x,int_t dim_y,uint64_t number_of_iterations,uint8_t workers);
 
 
+extern void test_hilbert();
 
 
 
