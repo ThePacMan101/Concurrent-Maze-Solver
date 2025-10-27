@@ -15,4 +15,4 @@ tests: tests.c bin/maze.o bin/maze_mcmc.o bin/maze_hilbert.o bin/special_charact
 	gcc -o bin/tests tests.c bin/maze.o bin/maze_mcmc.o bin/maze_hilbert.o bin/special_characters.o -Wall -lm -pthread
 
 clean:
-	del /s bin/*.exe
+	del /s /q bin
