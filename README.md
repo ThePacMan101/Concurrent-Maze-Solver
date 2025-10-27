@@ -47,3 +47,8 @@ example:
 ```shell
 >> ./bin/tests 1 2 4
 ```
+
+Run tests with no arguments to see the description for each test:
+```shell
+>> ./bin/tests
+```
