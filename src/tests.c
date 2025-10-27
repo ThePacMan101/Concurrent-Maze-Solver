@@ -100,6 +100,7 @@ int main(int argc, char ** argv){
             case 5: test_5(); break;
             case 6: test_6(); break;
             case 7: test_7(); break; // 7 takes too long, maybe it's broken?
+            case 8: test_hilbert();break;
             default: break;
         } 
     }
