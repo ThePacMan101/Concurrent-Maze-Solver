@@ -5,7 +5,7 @@
 char* description_1 = "generates a 50x50 maze";
 void test_1(){
     uint64_t iterations = 50*50*50;
-    maze_t maze = generate_random_maze(50,50,iterations);
+    maze_t maze = generate_random_maze_MCMC(50,50,iterations);
     print_maze(maze);
     free(maze.data);
 }
@@ -14,7 +14,7 @@ char* description_2 = "generates NxN mazes, with N = {10 , 20, ..., 100}";
 void test_2(){
     for(uint64_t size = 10 ; size <= 100 ; size+=10){
         uint64_t iterations = size*size*size;
-        maze_t maze = generate_random_maze(size,size,iterations);
+        maze_t maze = generate_random_maze_MCMC(size,size,iterations);
         print_maze(maze);
         free(maze.data);
     }
@@ -22,7 +22,7 @@ void test_2(){
 
 char* description_3 = "generates a 500x500 maze";
 void test_3(){
-    maze_t maze = generate_random_maze(500,500, 125000100);
+    maze_t maze = generate_random_maze_MCMC(500,500, 125000100);
     print_maze(maze);
     free(maze.data);
 }
@@ -33,7 +33,7 @@ void test_4(){
     uint64_t iterations = size*size*size + 100;
     uint8_t power = log2l(CPU_CORES);
     uint8_t workers = 1<<power; 
-    maze_t maze = generate_random_maze_parallel(size,size,iterations,workers);
+    maze_t maze = generate_random_maze_MCMC_parallel(size,size,iterations,workers);
     print_maze(maze);
     free(maze.data);
 }
@@ -42,7 +42,7 @@ char* description_5 = "generates a 10x10 maze shows and its slices";
 void test_5(){
     int_t size = 10;
     uint64_t iterations = size*size*size;
-    maze_t maze = generate_random_maze(size,size,iterations);
+    maze_t maze = generate_random_maze_MCMC(size,size,iterations);
     print_maze(maze);
     printf("----\n");
     maze_t sub_mazes[4];
@@ -60,18 +60,19 @@ void test_6(){
     uint64_t iterations = size*size*size + 100;
     uint8_t power = log2l(CPU_CORES);
     uint8_t workers = 1<<power; 
-    maze_t maze = generate_random_maze_parallel(size,size,iterations,workers);
+    maze_t maze = generate_random_maze_MCMC_parallel(size,size,iterations,workers);
     print_maze(maze);
     free(maze.data);
 }
 
+// takes to long (broken??)
 char* description_7 = "generates a 4096x4096 maze in parallel";
 void test_7(){
     int_t size = 4096;
     uint64_t iterations = ((uint64_t)size)*((uint64_t)size)*((uint64_t)size) + 100;
     uint8_t power = log2l(CPU_CORES);
     uint8_t workers = 1<<power; 
-    maze_t maze = generate_random_maze_parallel(size,size,iterations,workers);
+    maze_t maze = generate_random_maze_MCMC_parallel(size,size,iterations,workers);
     print_maze(maze);
     free(maze.data);
 }
@@ -98,7 +99,7 @@ int main(int argc, char ** argv){
             case 4: test_4(); break;
             case 5: test_5(); break;
             case 6: test_6(); break;
-            case 7: test_7(); break;
+            case 7: test_7(); break; // 7 takes too long, maybe it's broken?
             default: break;
         } 
     }

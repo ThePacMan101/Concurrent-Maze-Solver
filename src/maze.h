@@ -26,18 +26,40 @@ typedef struct{
 } maze_t;
 #define maze_at(maze,_x,_y) ((maze).data[(maze).start + (_x) + (_y)*(maze).true_dimensions.x])
 
-// generates a random maze using the Markov Chain Montecarlo method
-extern maze_t generate_random_maze(int_t dim_x,int_t dim_y, uint64_t number_of_iterations);
 
-// generates a random maze using the Markov Chain Montecarlo method in parallel
-// the maze must be square, its side must be a power of two, and the number of workers
-// must also be a power of two.
-extern maze_t generate_random_maze_parallel(int_t dim_x,int_t dim_y,uint64_t number_of_iterations,uint8_t workers);
+// alocates the data for a maze for the first time
+extern void alloc_maze(maze_t *maze,int_t dim_x, int_t dim_y);
+
+
+// gets a sub-maze of a bigger maze, that points to the same data in memory
+extern maze_t get_sub_maze(maze_t maze,int_t start_x,int_t start_y,int_t end_x,int_t end_y);
+
 
 // prints maze to shell, keep in mind a large maze may be
 // hard to understand when using this visualization.
 extern void print_maze(maze_t maze);
 
+
+// gets a random direction between one of the available directions
+extern direction_t random_direction(direction_t available);
+
+
+// splits a maze into parts, that points to the same data in memory
 extern void split_maze(maze_t maze ,maze_t *target,uint8_t parts);
+
+
+// generates a random maze using the Markov Chain Montecarlo method
+extern maze_t generate_random_maze_MCMC(int_t dim_x,int_t dim_y, uint64_t number_of_iterations);
+
+
+// generates a random maze using the Markov Chain Montecarlo method in parallel
+// the maze must be square, its side must be a power of two, and the number of workers
+// must also be a power of two.
+extern maze_t generate_random_maze_MCMC_parallel(int_t dim_x,int_t dim_y,uint64_t number_of_iterations,uint8_t workers);
+
+
+
+
+
 
 #endif
