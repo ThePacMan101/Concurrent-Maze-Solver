@@ -455,6 +455,7 @@ static hilbert_curve_t hilbert_curve_of_order(uint8_t order){
     hc.side = hc.original_side;
     hc.start=0;
     hc.data = (uint64_t*) calloc(hc.side*hc.side,sizeof(uint64_t));
+    if (!hc.data) PERROR("Colnd't allocate space for hillbert curve of size %d x %d",hc.side,hc.side);
 
     hillbert_curve_fill_A(hc,0);
     
