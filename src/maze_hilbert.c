@@ -4,28 +4,18 @@
 
 
 // Hilbert Curve:
-
-// considering a 3x3 matrix as the following:
-// 00 01 02    00 01 02    •  •  •
-// 03 04 05 == 10 11 12 == •  •  •
-// 06 07 08    20 21 22    •  •  •
-//
-// a hilbert curve is a matrix (actually an array interpreted
-// as as matrix) with each cell being a pointer to another cell, 
-// such as:
 //
 // order 1:
-// ┌──┐    01 03    01 11  = → ↓
-// │  │ == 00 03 == 00 11 == ↑ •  where • is the "origing" or "end"
+// ┌──┐ 
+// │  │ 
 //
 // order 2:
-// ┌──┐  ┌──┐    01 05 03 07    01 11 03 13    →  ↓  →  ↓
-// │  └──┘  │    00 06 02 11    00 12 02 23    ↑  →  ↑  ↓
-// └──┐  ┌──┘ == 04 08 14 10 == 10 20 32 22 == ↑  ←  ↓  ←
-// ───┘  └───    13 09 15 15    31 21 33 33    →  ↑  →  •
-// 
-// Obs1: The side of a hillbert curve of order n is 2^n
-// Obs2: • represents a pointer that points to itself
+// ┌──┐  ┌──┐    
+// │  └──┘  │    
+// └──┐  ┌──┘  
+// ───┘  └───    
+
+
 
 typedef struct{
     uint64_t *data;
@@ -41,7 +31,6 @@ typedef struct{
 //     for(int i = 0 ; i < hc.side ; ++i){
 //         for(int j = 0 ; j < hc.side ; ++j){
 //             printf("%"PRIu64" ", hc_at(hc,j,i));
-//             // printf("%llu ",hc_at(hc,j,i));
 //         }                
 //         printf("\n");
 //     }
@@ -49,9 +38,10 @@ typedef struct{
 
 static hilbert_curve_t hilbert_curve_of_order(uint8_t order);
 
-// there are four different variations of the 
+// there are eight different variations of the 
 // hillbert curve fill, based on the
-// order the quadrants that are filled:
+// order the quadrants that are filled 
+// and the orientation:
 
 // A:
 // ↓ •     
