@@ -92,6 +92,7 @@ int main(int argc, char ** argv){
         printf("\n5. ");printf(description_5);
         printf("\n6. ");printf(description_6);
         printf("\n7. ");printf(description_7);
+        printf("\n8. ");printf(description_8);
 
         printf("\n\nexample:  ./bin/tests 1 5 6\n\n");
     }
