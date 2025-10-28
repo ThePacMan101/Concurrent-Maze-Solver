@@ -4,7 +4,7 @@ ___
 
 This project is a college assignment in which I create a concurrent application in C to solve a maze.
 
-We also generate mazes using the Markov Chain Montecarlo method, which I discovered through [here](https://www.youtube.com/watch?v=zbXKcDVV4G0).
+We also generate mazes using the Markov Chain Montecarlo method, which I discovered through [here](https://www.youtube.com/watch?v=zbXKcDVV4G0). And through the Hillbert Lookahead method, which I discovered through [here](https://www.youtube.com/watch?v=GTz6BEGs6zE), [and here](https://www.youtube.com/watch?v=O2Xy6mwnYfk). Also used this sources: [1](https://www.youtube.com/watch?v=3s7h2MHQtxc), [2](https://en.wikipedia.org/wiki/Hilbert_curve).
 
 The goal is not to necessarly explore the maze faster, but to study the behaviour of our concurrent exploration algorithm, as explained later in this description.
 ___
