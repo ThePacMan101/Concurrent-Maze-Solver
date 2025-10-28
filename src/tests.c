@@ -77,6 +77,11 @@ void test_7(){
     free(maze.data);
 }
 
+char* description_8 =  "generates a 8.192 x 8.192 hilbert curve fractal";
+void test_8(){
+    test_hilbert();
+}
+
 int main(int argc, char ** argv){
     srand(42);
     if(argc==1){
@@ -100,7 +105,7 @@ int main(int argc, char ** argv){
             case 5: test_5(); break;
             case 6: test_6(); break;
             case 7: test_7(); break; // 7 takes too long, maybe it's broken?
-            case 8: test_hilbert();break;
+            case 8: test_8();break;
             default: break;
         } 
     }
