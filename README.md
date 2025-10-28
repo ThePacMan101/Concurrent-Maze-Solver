@@ -29,6 +29,8 @@ Example of 30x30 maze with 9000 iterations for the MCMC method:
 Example of 60x60 maze with 216000 iterations for the MCMC method:
 ![alt text](imgs/maze-2.png)
 
+Example of a 256X256 maze generated using the Hillbert Lookahead method (cutout):
+![alt text](imgs/maze-3.png)
 ___
 How to compile and run:
 
