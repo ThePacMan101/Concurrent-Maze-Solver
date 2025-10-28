@@ -77,36 +77,92 @@ void test_7(){
     free(maze.data);
 }
 
-char* description_8 =  "generates a 8.192 x 8.192 hilbert curve fractal";
+char* description_8 =  "generates a 8.192 x 8.192 maze with hillbert lookahead";
 void test_8(){
-    test_hilbert();
+    clock_t start = clock();
+    generate_random_maze_hillbert_lookahead(8192);
+    clock_t end = clock();
+    float seconds = (float)(end - start) / CLOCKS_PER_SEC;
+    printf("finished after %.4fs...\n",seconds);
 }
 
+char* description_9 =  "generates a 1024 x 1024 maze with hillbert lookahead";
+void test_9(){
+    clock_t start = clock();
+    maze_t maze = generate_random_maze_hillbert_lookahead(1024);
+    clock_t end = clock();
+    float seconds = (float)(end - start) / CLOCKS_PER_SEC;
+    printf("finished after %.4fs...\n",seconds);
+    print_maze(maze);
+}
+
+char* description_10 =  "generates a 256 x 256 maze with hillbert lookahead";
+void test_10(){
+    clock_t start = clock();
+    maze_t maze = generate_random_maze_hillbert_lookahead(256);
+    clock_t end = clock();
+    float seconds = (float)(end - start) / CLOCKS_PER_SEC;
+    printf("finished after %.4fs...\n",seconds);
+    print_maze(maze);
+}
+
+char* description_11 =  "generates a 128 x 128 maze with hillbert lookahead";
+void test_11(){
+    clock_t start = clock();
+    maze_t maze = generate_random_maze_hillbert_lookahead(128);
+    clock_t end = clock();
+    float seconds = (float)(end - start) / CLOCKS_PER_SEC;
+    printf("finished after %.4fs...\n",seconds);
+    print_maze(maze);
+}
+
+char* description_12 =  "generates a 32 x 32 maze with hillbert lookahead";
+void test_12(){
+    clock_t start = clock();
+    maze_t maze = generate_random_maze_hillbert_lookahead(32);
+    clock_t end = clock();
+    float seconds = (float)(end - start) / CLOCKS_PER_SEC;
+    printf("finished after %.4fs...\n",seconds);
+    print_maze(maze);
+}
+
+
+
+
 int main(int argc, char ** argv){
-    srand(42);
+    srand(time(NULL));
     if(argc==1){
-        printf("\n1. ");printf(description_1);
-        printf("\n2. ");printf(description_2);
-        printf("\n3. ");printf(description_3);
-        printf("\n4. ");printf(description_4);
-        printf("\n5. ");printf(description_5);
-        printf("\n6. ");printf(description_6);
-        printf("\n7. ");printf(description_7);
-        printf("\n8. ");printf(description_8);
+        printf("\n 1. ");printf(description_1);
+        printf("\n 2. ");printf(description_2);
+        printf("\n 3. ");printf(description_3);
+        printf("\n 4. ");printf(description_4);
+        printf("\n 5. ");printf(description_5);
+        printf("\n 6. ");printf(description_6);
+        printf("\n 7. ");printf(description_7);
+        printf("\n 8. ");printf(description_8);
+        printf("\n 9. ");printf(description_9);
+        printf("\n10. ");printf(description_10);
+        printf("\n11. ");printf(description_11);
+        printf("\n12. ");printf(description_12);
 
         printf("\n\nexample:  ./bin/tests 1 5 6\n\n");
     }
     for(int_t i = 1 ; i <= argc ;++i){
         int_t test = atoi(argv[i]);
         switch (test) {
-            case 1: test_1(); break;
-            case 2: test_2(); break;
-            case 3: test_3(); break;
-            case 4: test_4(); break;
-            case 5: test_5(); break;
-            case 6: test_6(); break;
-            case 7: test_7(); break; // 7 takes too long, maybe it's broken?
-            case 8: test_8();break;
+            case  1: test_1 (); break;
+            case  2: test_2 (); break;
+            case  3: test_3 (); break;
+            case  4: test_4 (); break;
+            case  5: test_5 (); break;
+            case  6: test_6 (); break;
+            case  7: test_7 (); break; // 7 takes too long, maybe it's broken?
+            case  8: test_8 (); break;
+            case  9: test_9 (); break;
+            case 10: test_10(); break;
+            case 11: test_11(); break;
+            case 12: test_12(); break;
+
             default: break;
         } 
     }

@@ -1,6 +1,7 @@
 #include "common.h"
 #include "maze.h"
 #include "special_characters.h"
+#include <inttypes.h>
 
 
 // Hilbert Curve:
@@ -26,15 +27,15 @@ typedef struct{
 #define hc_at(hc,_x,_y)  ((hc).data[(hc).start+(_x)+(_y)*(hc).original_side])
 #define hc_pos(hc,_x,_y) ((_x)+(_y)*(hc).original_side)
 
-// #include <inttypes.h>
-// static void print_hilbert_curve(hilbert_curve_t hc){
-//     for(int i = 0 ; i < hc.side ; ++i){
-//         for(int j = 0 ; j < hc.side ; ++j){
-//             printf("%"PRIu64" ", hc_at(hc,j,i));
-//         }                
-//         printf("\n");
-//     }
-// }
+
+static void print_hilbert_curve(hilbert_curve_t hc){
+    for(int i = 0 ; i < hc.side ; ++i){
+        for(int j = 0 ; j < hc.side ; ++j){
+            printf("%03"PRIu64" ", hc_at(hc,j,i));
+        }                
+        printf("\n");
+    }
+}
 
 static hilbert_curve_t hilbert_curve_of_order(uint8_t order);
 
@@ -455,7 +456,7 @@ static hilbert_curve_t hilbert_curve_of_order(uint8_t order){
     hc.side = hc.original_side;
     hc.start=0;
     hc.data = (uint64_t*) calloc(hc.side*hc.side,sizeof(uint64_t));
-    if (!hc.data) PERROR("Couldn't allocate space for hillbert curve of size %d x %d",hc.side,hc.side);
+    if (!hc.data) PERROR("Couldn't allocate space for hillbert curve of size %"PRIu64" x %"PRIu64"",hc.side,hc.side);
 
     hillbert_curve_fill_A(hc,0);
     
@@ -463,14 +464,90 @@ static hilbert_curve_t hilbert_curve_of_order(uint8_t order){
     return hc;
 }
 
+static maze_t get_maze_from_hilbert_curve(hilbert_curve_t hc){
+    maze_t maze;
+    alloc_maze(&maze,hc.side,hc.side);
+    for(uint64_t y = 0 ; y < hc.side ; ++y){
+        for(uint64_t x = 0 ; x < hc.side ; ++x){
+            direction_t available = NORTH|EAST|SOUTH|WEST;
 
+            // can't open to outside of the maze
+            if(x==0) available &= ~WEST;
+            if(x==hc.side-1) available &= ~EAST;
+            if(y==0) available &= ~NORTH;
+            if(y==hc.side-1) available &= ~SOUTH;
+
+            // can't open to neighbors with lower hilbert index
+            uint64_t this_hilbert_idx = hc_at(hc,x,y);
+            if(available&WEST){
+                uint64_t west_neighbor = hc_at(hc,x-1,y);
+                if(west_neighbor<this_hilbert_idx)
+                    available &= ~WEST;
+            }
+            if(available&NORTH){
+                uint64_t north_neighbor = hc_at(hc,x,y-1);
+                if(north_neighbor<this_hilbert_idx)
+                    available &= ~NORTH;
+            }
+            if(available&EAST){
+                uint64_t east_neighbor = hc_at(hc,x+1,y);
+                if(east_neighbor<this_hilbert_idx)
+                    available &= ~EAST;
+            }
+            if(available&SOUTH){
+                uint64_t west_neighbor = hc_at(hc,x,y+1);
+                if(west_neighbor<this_hilbert_idx)
+                    available &= ~SOUTH;
+            }
+            if(available == 0 ) continue;
+            direction_t randomized_direction =  random_direction(available);
+            maze_at(maze,x,y).open_directions |= randomized_direction;
+            switch (randomized_direction){
+                case WEST:
+                maze_at(maze,x-1,y).open_directions |= EAST;
+                break;
+                case NORTH:
+                maze_at(maze,x,y-1).open_directions |= SOUTH;
+                break;
+                case EAST:
+                maze_at(maze,x+1,y).open_directions |= WEST;
+                break;
+                case SOUTH:
+                maze_at(maze,x,y+1).open_directions |= NORTH;
+                break;
+
+            default:
+                break;
+            }
+            // printf("\n\nAt: %"PRIu64",%"PRIu64"\n",y,x);
+            // printf("Available directions are: ");
+            // print_direction(available);
+            
+        }
+        // printf("\n");
+
+    }
+    return maze;
+}
+
+maze_t generate_random_maze_hillbert_lookahead(uint64_t side){
+    uint8_t order = log2f(side);
+    if(log2l(side)!= order)
+        PERROR("Can only generate random mazes with hillbert lookahead with sides as powers of 2.");
+    hilbert_curve_t hc = hilbert_curve_of_order(order);
+    maze_t maze = get_maze_from_hilbert_curve(hc);
+    return maze;
+}
 
 // test hilbert functions
 void test_hilbert(){
     clock_t start = clock();
     hilbert_curve_t hc = hilbert_curve_of_order(13);
+    // print_hilbert_curve(hc);
+    maze_t maze = get_maze_from_hilbert_curve(hc);
     clock_t end = clock();
     float seconds = (float)(end - start) / CLOCKS_PER_SEC;
     printf("finished after %.4fs...\n",seconds);
+    print_maze(maze);
     free(hc.data);
 }

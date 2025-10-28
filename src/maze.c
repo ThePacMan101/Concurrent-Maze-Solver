@@ -3,6 +3,34 @@
 #include "common.h"
 
 
+void print_direction(direction_t direction){
+#define P_DIR(D) case D: printf(#D);break;
+    switch (direction) {
+        P_DIR(NORTH);
+        P_DIR(SOUTH);
+        P_DIR(EAST);
+        P_DIR(WEST);
+
+        P_DIR(NORTH|EAST);
+        P_DIR(NORTH|SOUTH);
+        P_DIR(NORTH|WEST);
+        P_DIR(EAST|SOUTH);
+        P_DIR(EAST|WEST);
+        P_DIR(SOUTH|WEST);
+
+        P_DIR(NORTH|EAST|SOUTH);
+        P_DIR(NORTH|EAST|WEST);
+        P_DIR(NORTH|SOUTH|WEST);
+        P_DIR(EAST|SOUTH|WEST);
+
+        P_DIR(NORTH|EAST|SOUTH|WEST);
+        default:
+        break;
+    }
+#undef P_DIR
+}
+
+
 
 void alloc_maze(maze_t *maze,int_t dim_x, int_t dim_y){
     maze->dimensions = (vec2_t){dim_x,dim_y};
