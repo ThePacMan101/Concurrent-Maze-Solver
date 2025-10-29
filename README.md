@@ -32,25 +32,14 @@ Example of 60x60 maze with 216000 iterations for the MCMC method:
 Example of a 256X256 maze generated using the Hillbert Lookahead method (cutout):
 ![alt text](imgs/maze-3.png)
 ___
-How to compile and run:
 
-To compile:
-in, /src:
-```shell
->> make tests
-```
+## Compile and run
 
-To run:
-in, /src:
-```shell
->> ./bin/tests <tests to be run>
-```
-example:
-```shell
->> ./bin/tests 1 2 4
-```
+´´´sh
+# in the root directory
+mkdir build
 
-Run tests with no arguments to see the description for each test:
-```shell
->> ./bin/tests
-```
+make tests
+
+./build/tests
+´´´
