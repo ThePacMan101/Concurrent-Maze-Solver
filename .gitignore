@@ -1,4 +1,21 @@
-.vscode
-src/bin/**
-!src/bin/.gitkeep
-largeoutput.txt
+# Build output directories
+/build/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+
+# Temporary and log files
+*.log
+*.tmp
+
+# IDE and editor files (optional but recommended)
+.vscode/
+.idea/
+*.swp
+*~
+
+
+# Optional: ignore generated images if they’re not source assets
+# /imgs/*.png

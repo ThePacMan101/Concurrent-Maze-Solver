@@ -32,25 +32,41 @@ Example of 60x60 maze with 216000 iterations for the MCMC method:
 Example of a 256X256 maze generated using the Hillbert Lookahead method (cutout):
 ![alt text](imgs/maze-3.png)
 ___
-How to compile and run:
+## How to Compile and Run
 
-To compile:
-in, /src:
-```shell
->> make tests
+This project uses CMake for building. Ensure you have `cmake`, `make`, and a C compiler (like GCC) installed.
+
+### 1. Compiling
+
+First, configure the project using CMake and then compile it with Make.
+
+```bash
+# Create a directory for the build files
+mkdir -p build
+
+# Change into the build directory
+cd build
+
+# Configure the project
+cmake ..
+
+# Compile the source code
+make
 ```
 
-To run:
-in, /src:
-```shell
->> ./bin/tests <tests to be run>
-```
-example:
-```shell
->> ./bin/tests 1 2 4
+### 2. Running
+
+The executable, `tests`, will be located in the `build` directory.
+
+To see a menu of available tests, run the program from the project root without any arguments:
+
+```bash
+./build/tests
 ```
 
-Run tests with no arguments to see the description for each test:
-```shell
->> ./bin/tests
+To execute specific tests, pass the test numbers as arguments:
+
+```bash
+# Example of running tests 1, 2, and 4
+./build/tests 1 2 4
 ```
