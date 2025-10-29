@@ -2,7 +2,7 @@
 #include "common.h"
 
 
-char* description_1 = "generates a 50x50 maze";
+#define description_1 "generates a 50x50 maze"
 void test_1(){
     uint64_t iterations = 50*50*50;
     maze_t maze = generate_random_maze_MCMC(50,50,iterations);
@@ -10,7 +10,7 @@ void test_1(){
     free(maze.data);
 }
 
-char* description_2 = "generates NxN mazes, with N = {10 , 20, ..., 100}";
+#define description_2 "generates NxN mazes, with N = {10 , 20, ..., 100}"
 void test_2(){
     for(uint64_t size = 10 ; size <= 100 ; size+=10){
         uint64_t iterations = size*size*size;
@@ -20,14 +20,14 @@ void test_2(){
     }
 }
 
-char* description_3 = "generates a 500x500 maze";
+#define description_3 "generates a 500x500 maze"
 void test_3(){
     maze_t maze = generate_random_maze_MCMC(500,500, 125000100);
     print_maze(maze);
     free(maze.data);
 }
 
-char* description_4 = "generates as 32x32 maze in parallel";
+#define description_4 "generates as 32x32 maze in parallel"
 void test_4(){
     int_t size = 32;
     uint64_t iterations = size*size*size + 100;
@@ -38,7 +38,7 @@ void test_4(){
     free(maze.data);
 }
 
-char* description_5 = "generates a 10x10 maze shows and its slices";
+#define description_5 "generates a 10x10 maze shows and its slices"
 void test_5(){
     int_t size = 10;
     uint64_t iterations = size*size*size;
@@ -54,7 +54,7 @@ void test_5(){
     free(maze.data);
 }
 
-char* description_6 =  "generates a 1024x1024 maze in parallel";
+#define description_6 "generates a 1024x1024 maze in parallel"
 void test_6(){
     int_t size = 1024;
     uint64_t iterations = size*size*size + 100;
@@ -66,7 +66,7 @@ void test_6(){
 }
 
 // takes to long (broken??)
-char* description_7 = "generates a 4096x4096 maze in parallel";
+#define description_7 "generates a 4096x4096 maze in parallel"
 void test_7(){
     int_t size = 4096;
     uint64_t iterations = ((uint64_t)size)*((uint64_t)size)*((uint64_t)size) + 100;
@@ -77,7 +77,7 @@ void test_7(){
     free(maze.data);
 }
 
-char* description_8 =  "generates a 8.192 x 8.192 maze with hillbert lookahead";
+#define description_8 "generates a 8.192 x 8.192 maze with hillbert lookahead"
 void test_8(){
     clock_t start = clock();
     generate_random_maze_hillbert_lookahead(8192);
@@ -86,7 +86,7 @@ void test_8(){
     printf("finished after %.4fs...\n",seconds);
 }
 
-char* description_9 =  "generates a 1024 x 1024 maze with hillbert lookahead";
+#define description_9  "generates a 1024 x 1024 maze with hillbert lookahead"
 void test_9(){
     clock_t start = clock();
     maze_t maze = generate_random_maze_hillbert_lookahead(1024);
@@ -96,7 +96,7 @@ void test_9(){
     print_maze(maze);
 }
 
-char* description_10 =  "generates a 256 x 256 maze with hillbert lookahead";
+#define description_10  "generates a 256 x 256 maze with hillbert lookahead"
 void test_10(){
     clock_t start = clock();
     maze_t maze = generate_random_maze_hillbert_lookahead(256);
@@ -106,7 +106,7 @@ void test_10(){
     print_maze(maze);
 }
 
-char* description_11 =  "generates a 128 x 128 maze with hillbert lookahead";
+#define description_11 "generates a 128 x 128 maze with hillbert lookahead"
 void test_11(){
     clock_t start = clock();
     maze_t maze = generate_random_maze_hillbert_lookahead(128);
@@ -116,7 +116,7 @@ void test_11(){
     print_maze(maze);
 }
 
-char* description_12 =  "generates a 32 x 32 maze with hillbert lookahead";
+#define description_12 "generates a 32 x 32 maze with hillbert lookahead"
 void test_12(){
     clock_t start = clock();
     maze_t maze = generate_random_maze_hillbert_lookahead(32);
