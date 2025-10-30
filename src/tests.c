@@ -1,5 +1,7 @@
 #include "common.h"
 #include "maze.h"
+#include <locale.h>
+#include <wchar.h>
 
 #define description_1 "generates a 50x50 maze"
 void test_1() {
@@ -129,6 +131,22 @@ void test_12() {
   print_maze(maze);
 }
 
+#define description_13 "generates and solves a small 8x8 maze"
+void test_13() {
+  uint64_t iterations = 8 * 8 * 8;
+  maze_t maze = generate_random_maze_MCMC(8, 8, iterations);
+  print_maze(maze);
+  free(maze.data);
+}
+
+#define description_14 "small test - 5x5 maze visualization"
+void test_14() {
+  uint64_t iterations = 5 * 5 * 5;
+  maze_t maze = generate_random_maze_MCMC(5, 5, iterations);
+  print_maze(maze);
+  free(maze.data);
+}
+
 int main(int argc, char **argv) {
   srand(time(NULL));
   if (argc == 1) {
@@ -156,6 +174,10 @@ int main(int argc, char **argv) {
     printf(description_11);
     printf("\n12. ");
     printf(description_12);
+    printf("\n13. ");
+    printf(description_13);
+    printf("\n14. ");
+    printf(description_14);
 
     printf("\n\nexample:  ./bin/tests 1 5 6\n\n");
   }
@@ -197,6 +219,12 @@ int main(int argc, char **argv) {
       break;
     case 12:
       test_12();
+      break;
+    case 13:
+      test_13();
+      break;
+    case 14:
+      test_14();
       break;
 
     default:
