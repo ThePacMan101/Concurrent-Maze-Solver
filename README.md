@@ -35,11 +35,11 @@ ___
 
 ## Compile and run
 
-´´´sh
+```sh
 # in the root directory
 mkdir build
 
-make tests
+make solver
 
-./build/tests
-´´´
+./build/solver
+```
