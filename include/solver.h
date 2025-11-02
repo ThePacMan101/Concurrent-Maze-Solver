@@ -75,6 +75,7 @@ typedef struct {
 typedef struct {
     solver_state_t *state;      // Shared state
     uint8_t worker_id;          // Thread identifier
+    uint32_t speed;             // animation speed
 } worker_args_t;
 
 
@@ -105,6 +106,6 @@ void cleanup_solver_state(solver_state_t *state);
 // ==============================================================================
 
 // Main solver function - launches worker threads and solves the maze
-void solve_maze(maze_t maze, uint8_t num_workers, bool enable_viz);
+void solve_maze(maze_t maze, uint8_t num_workers, bool enable_viz, uint32_t speed);
 
 #endif // SOLVER_H

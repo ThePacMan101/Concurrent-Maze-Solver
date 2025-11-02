@@ -207,6 +207,7 @@ static void* solver_worker(void *args) {
     worker_args_t *worker = (worker_args_t*) args;
     solver_state_t *state = worker->state;
     uint8_t worker_id = worker->worker_id;
+    uint32_t speed = worker->speed;
     
     vec2_t current_position;
     direction_t entry_direction = 0;  
@@ -377,7 +378,7 @@ static void* solver_worker(void *args) {
             }
             
             if (state->enable_visualization) {
-                usleep(5000); 
+                usleep(speed); 
             }
             
         } else {
@@ -414,7 +415,7 @@ static void* solver_worker(void *args) {
             }
             
             if (state->enable_visualization) {
-                usleep(5000); //ANIMATION SPEED 
+                usleep(speed); //ANIMATION SPEED 
             }
         }
     }
@@ -426,13 +427,13 @@ static void* solver_worker(void *args) {
     return NULL;
 }
 
-void solve_maze(maze_t maze, uint8_t num_workers, bool enable_iterative_visualization) {
+void solve_maze(maze_t maze, uint8_t num_workers, bool enable_iterative_visualization, uint32_t speed) {
     
     wprintf(L"Starting maze solver with %d workers\n", num_workers);
     wprintf(L"Maze dimensions: %d x %d\n", maze.dimensions.x, maze.dimensions.y);
     wprintf(L"Goal: (%d, %d)\n", maze.dimensions.x - 1, maze.dimensions.y - 1);
     
-    if (!enable_iterative_visualization) {
+    if (enable_iterative_visualization) {
         wprintf(L"\n=== INITIAL MAZE ===\n");
         print_maze(maze);
         wprintf(L"\n");
@@ -459,6 +460,7 @@ void solve_maze(maze_t maze, uint8_t num_workers, bool enable_iterative_visualiz
         
         args->state = &state;
         args->worker_id = i;
+        args->speed = speed;
         
         pthread_create(&threads[i], NULL, solver_worker, (void*)args);
     }
