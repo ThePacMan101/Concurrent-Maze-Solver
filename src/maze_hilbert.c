@@ -28,14 +28,14 @@ typedef struct{
 #define hc_pos(hc,_x,_y) ((_x)+(_y)*(hc).original_side)
 
 
-static void print_hilbert_curve(hilbert_curve_t hc){
-    for(int i = 0 ; i < hc.side ; ++i){
-        for(int j = 0 ; j < hc.side ; ++j){
-            printf("%03"PRIu64" ", hc_at(hc,j,i));
-        }                
-        printf("\n");
-    }
-}
+// static void print_hilbert_curve(hilbert_curve_t hc){
+//     for(int i = 0 ; i < hc.side ; ++i){
+//         for(int j = 0 ; j < hc.side ; ++j){
+//             printf("%03"PRIu64" ", hc_at(hc,j,i));
+//         }                
+//         printf("\n");
+//     }
+// }
 
 static hilbert_curve_t hilbert_curve_of_order(uint8_t order);
 

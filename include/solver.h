@@ -69,6 +69,7 @@ typedef struct {
     worker_position_t *worker_positions; // Array of worker positions for visualization
     pthread_mutex_t viz_mutex;          // Mutex for visualization updates
     bool enable_visualization;          // Enable real-time visualization
+    uint32_t speed;
 } solver_state_t;
 
 // Arguments passed to each worker thread

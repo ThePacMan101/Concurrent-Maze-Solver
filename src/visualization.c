@@ -273,7 +273,7 @@ void* visualizer_thread(void *args) {
         print_maze_animated(state);
         
         // Small delay to control animation speed
-        usleep(5000); // 50ms = 20 FPS
+        usleep(state->speed); // 50ms = 20 FPS
     }
     
     return NULL;

@@ -38,7 +38,7 @@ void test_3() {
   free(maze.data);
 }
 
-#define description_4 "generates as 32x32 maze in parallel"
+#define description_4 "generates as 32x32 maze in parallel (has loops, not a perfect maze)"
 void test_4() {
   int_t size = 32;
   uint64_t iterations = size * size * size + 100;
@@ -213,6 +213,63 @@ void test_16(){
   free(maze.data);
 }
 
+#define description_17 "generates a simetric 32x32 maze with two ways from start to end"
+void test_17(){
+  maze_t maze;
+  int_t side = 32;
+  alloc_maze(&maze,side,side);
+  for(int i = 0 ; i < side ; ++i){
+    maze_at(maze,i,0).open_directions|=(EAST|WEST);
+    maze_at(maze,0,i).open_directions|=(NORTH|SOUTH);
+    maze_at(maze,i,side-1).open_directions|=(EAST|WEST);
+    maze_at(maze,side-1,i).open_directions|=(NORTH|SOUTH);
+  }
+  maze_at(maze ,   0    ,   0    ).open_directions = ( EAST  | SOUTH );
+  maze_at(maze ,   0    , side-1 ).open_directions = ( EAST  | NORTH );
+  maze_at(maze , side-1 ,   0    ).open_directions = ( WEST  | SOUTH );
+  maze_at(maze , side-1 , side-1 ).open_directions = ( WEST  | NORTH );
+  // print_maze(maze);
+  uint32_t speed = 10000;
+  bool iterative_visualization = true;
+  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  free(maze.data);
+}
+
+#define description_18 "generates a simetric 32x32 maze with multiple ways from start to end"
+void test_18(){
+  maze_t maze;
+  int_t side = 32;
+  alloc_maze(&maze,side,side);
+  for(int j = 0 ; j < side ; ++j){
+    for(int i = 0 ; i < side ; ++i){
+      maze_at(maze,i,j).open_directions|=(EAST|WEST|NORTH|SOUTH);
+      if(i == 0     ) maze_at(maze,i,j).open_directions &= ~WEST;
+      if(i == side-1) maze_at(maze,i,j).open_directions &= ~EAST;
+      if(j == 0     ) maze_at(maze,i,j).open_directions &= ~NORTH;
+      if(j == side-1) maze_at(maze,i,j).open_directions &= ~SOUTH;
+    }
+  }
+  // print_maze(maze);
+  uint32_t speed = 10000;
+  bool iterative_visualization = true;
+  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  free(maze.data);
+}
+
+#define description_19 "generates a 32x32 maze, with two areas that can't be reached from each other"
+void test_19(){
+  int_t side = 32;
+  maze_t maze = generate_random_maze_hillbert_lookahead(side);
+  for(int i = 0 ; i < side ; ++i){
+    maze_at(maze,15,i).open_directions = 0;
+  }
+  // print_maze(maze);
+  uint32_t speed = 10000;
+  bool iterative_visualization = true;
+  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  free(maze.data);
+}
+
 int main(int argc, char **argv) {
   srand(time(NULL));
   if (argc == 1) {
@@ -248,6 +305,12 @@ int main(int argc, char **argv) {
     printf(description_15);
     printf("\n16. ");
     printf(description_16);
+    printf("\n17. ");
+    printf(description_17);
+    printf("\n18. ");
+    printf(description_18);
+    printf("\n19. ");
+    printf(description_19);
 
 
     printf("\n\nexample:  ./bin/tests 1 5 6\n\n");
@@ -302,6 +365,15 @@ int main(int argc, char **argv) {
       break;
     case 16:
       test_16();
+      break;
+    case 17:
+      test_17();
+      break;
+    case 18:
+      test_18();
+      break;
+    case 19:
+      test_19();
       break;
 
     default:

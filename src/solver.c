@@ -433,7 +433,7 @@ void solve_maze(maze_t maze, uint8_t num_workers, bool enable_iterative_visualiz
     wprintf(L"Maze dimensions: %d x %d\n", maze.dimensions.x, maze.dimensions.y);
     wprintf(L"Goal: (%d, %d)\n", maze.dimensions.x - 1, maze.dimensions.y - 1);
     
-    if (enable_iterative_visualization) {
+    if (!enable_iterative_visualization) {
         wprintf(L"\n=== INITIAL MAZE ===\n");
         print_maze(maze);
         wprintf(L"\n");
@@ -441,6 +441,7 @@ void solve_maze(maze_t maze, uint8_t num_workers, bool enable_iterative_visualiz
     
     solver_state_t state;
     init_solver_state(&state, maze, num_workers, enable_iterative_visualization);
+    state.speed = speed;
     
     pthread_t *threads = (pthread_t*) malloc(num_workers * sizeof(pthread_t));
     if (!threads) {
@@ -451,7 +452,7 @@ void solve_maze(maze_t maze, uint8_t num_workers, bool enable_iterative_visualiz
     if (enable_iterative_visualization) {
         pthread_create(&viz_thread, NULL, visualizer_thread, (void*)&state);
     }
-    
+    usleep(200);
     for (uint8_t i = 0; i < num_workers; i++) {
         worker_args_t *args = (worker_args_t*) malloc(sizeof(worker_args_t));
         if (!args) {
