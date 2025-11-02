@@ -1,5 +1,5 @@
 build:
-	mkdir -p build
+	mkdir build -p
 
 build/maze.o: src/maze.c build
 	gcc -o build/maze.o -c src/maze.c -lm -pthread -Wall -O3 -Iinclude
@@ -22,8 +22,8 @@ build/visualization.o: src/visualization.c build
 build/main.o: src/main.c build
 	gcc -o build/main.o -c src/main.c -lm -pthread -Wall -O3 -Iinclude
 
-tests: src/tests.c build/maze.o build/maze_mcmc.o build/maze_hilbert.o build/special_characters.o build
-	gcc -o build/tests src/tests.c build/maze.o build/maze_mcmc.o build/maze_hilbert.o build/special_characters.o -Wall -lm -pthread -O3 -Iinclude
+tests: src/tests.c build/visualization.o build/solver_logic.o build/maze.o build/maze_mcmc.o build/maze_hilbert.o build/special_characters.o build
+	gcc -o build/tests src/tests.c build/visualization.o build/solver_logic.o build/maze.o build/maze_mcmc.o build/maze_hilbert.o build/special_characters.o -Wall -lm -pthread -O3 -Iinclude
 
 solver: build/main.o build/solver_logic.o build/visualization.o build/maze.o build/maze_mcmc.o build/maze_hilbert.o build/special_characters.o build
 	gcc -o build/solver build/main.o build/solver_logic.o build/visualization.o build/maze.o build/maze_mcmc.o build/maze_hilbert.o build/special_characters.o -Wall -lm -pthread -O3 -Iinclude
