@@ -271,6 +271,7 @@ void test_19(){
 }
 
 int main(int argc, char **argv) {
+  setlocale(LC_ALL, "");
   srand(time(NULL));
   if (argc == 1) {
     printf("\n 1. ");
