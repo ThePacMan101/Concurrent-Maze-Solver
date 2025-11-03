@@ -344,6 +344,29 @@ void test_22() {
   }
   free(maze.data);
 }
+
+#define description_23                                                         \
+  "generates a 2048x2048 maze and solve it with 1, 2, 6 and 12 threads"
+void test_23() {
+  int_t side = 2048;
+
+  maze_t maze = generate_random_maze_hillbert_lookahead(side);
+  int32_t speed = 100;
+  clock_t start_time, end_time;
+
+  int num_of_threads[4] = {1, 2, 6, 12};
+  bool iterative_visualization = false;
+  for (int i = 0; i < 4; i++) {
+    start_time = clock();
+    printf("solving the %d x %d with %d thread(s) \n", side, side,
+           num_of_threads[i]);
+    solve_maze(maze, num_of_threads[i], iterative_visualization, speed);
+    end_time = clock();
+    double elapsed = ((double)end_time - start_time) / CLOCKS_PER_SEC;
+    printf("elapsed: %f seconds\n\n", elapsed);
+  }
+  free(maze.data);
+}
 int main(int argc, char **argv) {
   setlocale(LC_ALL, "");
   srand(time(NULL));
@@ -392,6 +415,8 @@ int main(int argc, char **argv) {
     printf(description_21);
     printf("\n22. ");
     printf(description_22);
+    printf("\n23. ");
+    printf(description_23);
 
     printf("\n\nexample:  ./bin/tests 1 5 6\n\n");
   }
@@ -463,6 +488,9 @@ int main(int argc, char **argv) {
       break;
     case 22:
       test_22();
+      break;
+    case 23:
+      test_23();
       break;
 
     default:
