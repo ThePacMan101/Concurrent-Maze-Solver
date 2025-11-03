@@ -256,6 +256,7 @@ static void* solver_worker(void *args) {
                     // Deadlock detected: all workers idle and no work available
                     state->shutdown = true;
                     pthread_cond_broadcast(&state->bifurcations.work_available);
+                    break;
                 }
                 
                 pthread_cond_wait(&state->bifurcations.work_available, &state->bifurcations.mutex);

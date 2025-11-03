@@ -2,6 +2,9 @@
 #include "maze.h"
 #include "solver.h"
 #include <locale.h>
+#include <stdint.h>
+#include <time.h>
+#include <unistd.h>
 #include <wchar.h>
 
 #define description_1 "generates a 50x50 maze"
@@ -11,7 +14,7 @@ void test_1() {
   // print_maze(maze);
   uint32_t speed = 5000;
   bool iterative_visualization = true;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
@@ -23,7 +26,7 @@ void test_2() {
     // print_maze(maze);
     uint32_t speed = 5000;
     bool iterative_visualization = true;
-    solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+    solve_maze(maze, CPU_CORES, iterative_visualization, speed);
     free(maze.data);
   }
 }
@@ -34,21 +37,23 @@ void test_3() {
   // print_maze(maze);
   uint32_t speed = 0;
   bool iterative_visualization = false;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
-#define description_4 "generates as 32x32 maze in parallel (has loops, not a perfect maze)"
+#define description_4                                                          \
+  "generates as 32x32 maze in parallel (has loops, not a perfect maze)"
 void test_4() {
   int_t size = 32;
   uint64_t iterations = size * size * size + 100;
   uint8_t power = log2l(CPU_CORES);
   uint8_t workers = 1 << power;
-  maze_t maze = generate_random_maze_MCMC_parallel(size, size, iterations, workers);
+  maze_t maze =
+      generate_random_maze_MCMC_parallel(size, size, iterations, workers);
   // print_maze(maze);
   uint32_t speed = 5000;
   bool iterative_visualization = true;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
@@ -74,11 +79,12 @@ void test_6() {
   uint64_t iterations = size * size * size + 100;
   uint8_t power = log2l(CPU_CORES);
   uint8_t workers = 1 << power;
-  maze_t maze = generate_random_maze_MCMC_parallel(size, size, iterations, workers);
+  maze_t maze =
+      generate_random_maze_MCMC_parallel(size, size, iterations, workers);
   // print_maze(maze);
   uint32_t speed = 0;
   bool iterative_visualization = false;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
@@ -91,7 +97,7 @@ void test_7() {
   printf("finished after %.4fs...\n", seconds);
   uint32_t speed = 5000;
   bool iterative_visualization = true;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
@@ -113,7 +119,7 @@ void test_9() {
   printf("finished after %.4fs...\n", seconds);
   uint32_t speed = 0;
   bool iterative_visualization = false;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
@@ -127,7 +133,7 @@ void test_10() {
   // print_maze(maze);
   uint32_t speed = 500;
   bool iterative_visualization = true;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
@@ -141,7 +147,7 @@ void test_11() {
   // print_maze(maze);
   uint32_t speed = 1000;
   bool iterative_visualization = true;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
@@ -155,7 +161,7 @@ void test_12() {
   // print_maze(maze);
   uint32_t speed = 5000;
   bool iterative_visualization = true;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
@@ -166,7 +172,7 @@ void test_13() {
   // print_maze(maze);
   uint32_t speed = 300000;
   bool iterative_visualization = true;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
@@ -177,99 +183,167 @@ void test_14() {
   print_maze(maze);
   uint32_t speed = 0;
   bool iterative_visualization = false;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
 #define description_15 "generates a straight 60x1 maze"
-void test_15(){
+void test_15() {
   maze_t maze;
-  alloc_maze(&maze,60,1);
-  for(int i = 0 ; i < 60 ; ++i){
-    maze_at(maze,i,0).open_directions|=(EAST|WEST);
+  alloc_maze(&maze, 60, 1);
+  for (int i = 0; i < 60; ++i) {
+    maze_at(maze, i, 0).open_directions |= (EAST | WEST);
   }
-  maze_at(maze,0,0).open_directions = EAST;
-  maze_at(maze,59,0).open_directions = WEST;
+  maze_at(maze, 0, 0).open_directions = EAST;
+  maze_at(maze, 59, 0).open_directions = WEST;
   // print_maze(maze);
   uint32_t speed = 5000;
   bool iterative_visualization = true;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
 #define description_16 "generates a straight 8000x1 maze"
-void test_16(){
+void test_16() {
   maze_t maze;
-  alloc_maze(&maze,8000,1);
-  for(int i = 0 ; i < 8000 ; ++i){
-    maze_at(maze,i,0).open_directions|=(EAST|WEST);
+  alloc_maze(&maze, 8000, 1);
+  for (int i = 0; i < 8000; ++i) {
+    maze_at(maze, i, 0).open_directions |= (EAST | WEST);
   }
-  maze_at(maze,0,0).open_directions = EAST;
-  maze_at(maze,7999,0).open_directions = WEST;
+  maze_at(maze, 0, 0).open_directions = EAST;
+  maze_at(maze, 7999, 0).open_directions = WEST;
   // print_maze(maze);
   uint32_t speed = 2000;
   bool iterative_visualization = true;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
-#define description_17 "generates a simetric 32x32 maze with two ways from start to end"
-void test_17(){
+#define description_17                                                         \
+  "generates a simetric 32x32 maze with two ways from start to end"
+void test_17() {
   maze_t maze;
   int_t side = 32;
-  alloc_maze(&maze,side,side);
-  for(int i = 0 ; i < side ; ++i){
-    maze_at(maze,i,0).open_directions|=(EAST|WEST);
-    maze_at(maze,0,i).open_directions|=(NORTH|SOUTH);
-    maze_at(maze,i,side-1).open_directions|=(EAST|WEST);
-    maze_at(maze,side-1,i).open_directions|=(NORTH|SOUTH);
+  alloc_maze(&maze, side, side);
+  for (int i = 0; i < side; ++i) {
+    maze_at(maze, i, 0).open_directions |= (EAST | WEST);
+    maze_at(maze, 0, i).open_directions |= (NORTH | SOUTH);
+    maze_at(maze, i, side - 1).open_directions |= (EAST | WEST);
+    maze_at(maze, side - 1, i).open_directions |= (NORTH | SOUTH);
   }
-  maze_at(maze ,   0    ,   0    ).open_directions = ( EAST  | SOUTH );
-  maze_at(maze ,   0    , side-1 ).open_directions = ( EAST  | NORTH );
-  maze_at(maze , side-1 ,   0    ).open_directions = ( WEST  | SOUTH );
-  maze_at(maze , side-1 , side-1 ).open_directions = ( WEST  | NORTH );
+  maze_at(maze, 0, 0).open_directions = (EAST | SOUTH);
+  maze_at(maze, 0, side - 1).open_directions = (EAST | NORTH);
+  maze_at(maze, side - 1, 0).open_directions = (WEST | SOUTH);
+  maze_at(maze, side - 1, side - 1).open_directions = (WEST | NORTH);
   // print_maze(maze);
   uint32_t speed = 10000;
   bool iterative_visualization = true;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
-#define description_18 "generates a simetric 32x32 maze with multiple ways from start to end"
-void test_18(){
+#define description_18                                                         \
+  "generates a simetric 32x32 maze with multiple ways from start to end"
+void test_18() {
   maze_t maze;
   int_t side = 32;
-  alloc_maze(&maze,side,side);
-  for(int j = 0 ; j < side ; ++j){
-    for(int i = 0 ; i < side ; ++i){
-      maze_at(maze,i,j).open_directions|=(EAST|WEST|NORTH|SOUTH);
-      if(i == 0     ) maze_at(maze,i,j).open_directions &= ~WEST;
-      if(i == side-1) maze_at(maze,i,j).open_directions &= ~EAST;
-      if(j == 0     ) maze_at(maze,i,j).open_directions &= ~NORTH;
-      if(j == side-1) maze_at(maze,i,j).open_directions &= ~SOUTH;
+  alloc_maze(&maze, side, side);
+  for (int j = 0; j < side; ++j) {
+    for (int i = 0; i < side; ++i) {
+      maze_at(maze, i, j).open_directions |= (EAST | WEST | NORTH | SOUTH);
+      if (i == 0)
+        maze_at(maze, i, j).open_directions &= ~WEST;
+      if (i == side - 1)
+        maze_at(maze, i, j).open_directions &= ~EAST;
+      if (j == 0)
+        maze_at(maze, i, j).open_directions &= ~NORTH;
+      if (j == side - 1)
+        maze_at(maze, i, j).open_directions &= ~SOUTH;
     }
   }
   // print_maze(maze);
   uint32_t speed = 10000;
   bool iterative_visualization = true;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
-#define description_19 "generates a 32x32 maze, with two areas that can't be reached from each other"
-void test_19(){
+#define description_19                                                         \
+  "generates a 32x32 maze, with two areas that can't be reached from each "    \
+  "other"
+void test_19() {
   int_t side = 32;
   maze_t maze = generate_random_maze_hillbert_lookahead(side);
-  for(int i = 0 ; i < side ; ++i){
-    maze_at(maze,15,i).open_directions = 0;
+  for (int i = 0; i < side; ++i) {
+    maze_at(maze, 15, i).open_directions = 0;
   }
   // print_maze(maze);
   uint32_t speed = 10000;
   bool iterative_visualization = true;
-  solve_maze(maze, CPU_CORES,iterative_visualization,speed);
+  solve_maze(maze, CPU_CORES, iterative_visualization, speed);
   free(maze.data);
 }
 
+#define description_20                                                         \
+  "generates a 64x64 maze and solve it with 1, 2, 6 and 12 threads"
+void test_20() {
+  int_t side = 64;
+  maze_t maze = generate_random_maze_hillbert_lookahead(side);
+  int32_t speed = 100000;
+  int num_of_threads[4] = {1, 2, 6, 12};
+  bool iterative_visualization = true;
+  for (int i = 0; i < 4; i++) {
+    solve_maze(maze, num_of_threads[i], iterative_visualization, speed);
+    usleep(100);
+  }
+  free(maze.data);
+}
+
+#define description_21                                                         \
+  "generates a 256x256 maze and solve it with 1, 2, 6 and 12 threads"
+void test_21() {
+  int_t side = 256;
+
+  maze_t maze = generate_random_maze_hillbert_lookahead(side);
+  int32_t speed = 100;
+  clock_t start_time, end_time;
+
+  int num_of_threads[4] = {1, 2, 6, 12};
+  bool iterative_visualization = false;
+  for (int i = 0; i < 4; i++) {
+    start_time = clock();
+    printf("solving the %d x %d with %d thread(s) \n", side, side,
+           num_of_threads[i]);
+    solve_maze(maze, num_of_threads[i], iterative_visualization, speed);
+    end_time = clock();
+    double elapsed = ((double)end_time - start_time) / CLOCKS_PER_SEC;
+    printf("elapsed: %f seconds\n\n", elapsed);
+  }
+  free(maze.data);
+}
+
+#define description_22                                                         \
+  "generates a 512x512 maze and solve it with 1, 2, 6 and 12 threads"
+void test_22() {
+  int_t side = 512;
+
+  maze_t maze = generate_random_maze_hillbert_lookahead(side);
+  int32_t speed = 100;
+  clock_t start_time, end_time;
+
+  int num_of_threads[4] = {1, 2, 6, 12};
+  bool iterative_visualization = false;
+  for (int i = 0; i < 4; i++) {
+    start_time = clock();
+    printf("solving the %d x %d with %d thread(s) \n", side, side,
+           num_of_threads[i]);
+    solve_maze(maze, num_of_threads[i], iterative_visualization, speed);
+    end_time = clock();
+    double elapsed = ((double)end_time - start_time) / CLOCKS_PER_SEC;
+    printf("elapsed: %f seconds\n\n", elapsed);
+  }
+  free(maze.data);
+}
 int main(int argc, char **argv) {
   setlocale(LC_ALL, "");
   srand(time(NULL));
@@ -312,7 +386,12 @@ int main(int argc, char **argv) {
     printf(description_18);
     printf("\n19. ");
     printf(description_19);
-
+    printf("\n20, ");
+    printf(description_20);
+    printf("\n21. ");
+    printf(description_21);
+    printf("\n22. ");
+    printf(description_22);
 
     printf("\n\nexample:  ./bin/tests 1 5 6\n\n");
   }
@@ -376,8 +455,18 @@ int main(int argc, char **argv) {
     case 19:
       test_19();
       break;
+    case 20:
+      test_20();
+      break;
+    case 21:
+      test_21();
+      break;
+    case 22:
+      test_22();
+      break;
 
     default:
+      printf("No test selected, exiting...");
       break;
     }
   }
